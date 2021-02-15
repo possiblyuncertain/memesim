@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Simulation height="800" width="800" />
+        <Simulation height="100%" width="100%" />
       </header>
     </div>
   );
