@@ -5,6 +5,8 @@ import { IonPhaser } from '@ion-phaser/react';
 import infected from '../assets/infectedperson.png';
 import healthy from '../assets/healthyperson.png';
 
+import { World } from '../simulation';
+
 export default class Simulation extends React.Component {
   constructor (props) {
     super(props)
@@ -14,16 +16,29 @@ export default class Simulation extends React.Component {
       this.load.image('person', healthy);
       this.load.image('infected', infected);
       this.cameras.main.setBackgroundColor('#bbbbbb');
+      this.cameras.main.zoom *= 1/4;
     }
 
+    // scene callbacks need *this* to be phaser game object
+    let sim = this;
     function create () {
-      // *this* will point to phaser game object
-      this.add.image(400, 200, 'person');
-      this.add.image(400, 600, 'infected');
+      for (const person of sim.world.people) {
+        let newSprite = this.add.image(
+          person.pos[0],
+          person.pos[1],
+          'person',
+        );
+        sim.sprites.push(newSprite);
+      }
     }
 
     function update () {
       // *this* will point to phaser game object
+      // *sim* refers to the current *Simulation* instance
+      for (const [i, person] of sim.world.people.entries()) {
+        let newPos = person.pos.lerp(sim.sprites[i].getCenter(), 0.3);
+        sim.sprites[i].setPosition(newPos.x, newPos.y);
+      }
     }
 
     let game = {
@@ -36,6 +51,16 @@ export default class Simulation extends React.Component {
         update,
       },
     };
+
+    this.world = new World({
+      population: 20,
+      size: {
+        x: 1000,
+        y: 1000,
+      },
+    });
+
+    this.sprites = [];
 
     this.state = {
       game,
