@@ -12,6 +12,8 @@ import SimulationControls from './SimulationControls';
 
 import { World } from '../simulation';
 
+const SPRITE_SPEED = 0.8;
+
 export default class Simulation extends React.Component {
   constructor (props) {
     super(props)
@@ -41,7 +43,8 @@ export default class Simulation extends React.Component {
       // *this* will point to phaser game object
       // *sim* refers to the current *Simulation* instance
       for (const [i, person] of sim.world.people.entries()) {
-        let newPos = person.pos.lerp(sim.sprites[i].getCenter(), 0.3);
+        let newPos = person.pos.clone();
+        newPos.lerp(sim.sprites[i].getCenter(), SPRITE_SPEED);
         sim.sprites[i].setPosition(newPos.x, newPos.y);
       }
     }
@@ -57,55 +60,75 @@ export default class Simulation extends React.Component {
       },
     };
 
-    this.world = new World({
-      population: 20,
-      size: {
-        x: 1000,
-        y: 1000,
-      },
-    });
-
     this.sprites = [];
 
     // For syncing react with simulation
     let worldState = {
-      population: this.world.people.length,
-      spread: this.world.people.length,
+      population: 0,
+      spread: 0,
       turn: 0,
     };
 
     this.state = {
       game,
       worldState,
+      worldHistory : [],
+      playing: false,
     }
+
+    // Construct first world and initialise world state
+    this.reset();
 
     this.ref = React.createRef();
   }
 
   togglePlay = () => {
+    if (! this.state.playing && ! this.stepInterval) {
+      // Start playing (but ensure we can't make two intervals)
+      this.stepInterval = setInterval(() => {
+        this.step();
+      }, this.props.tick || 500);
+    }
+    else {
+      clearInterval(this.stepInterval);
+      this.stepInterval = null;
+    }
     this.setState((state, props) => ({
       playing: ! state.playing,
     }));
   }
 
-  stepForward = () => {
+  step = () => {
     this.world.step();
     this._syncSimulation();
   }
 
   reset = () => {
-    alert("RESET");
+    //TODO: configurize
+    this.world = new World({
+      population: 50,
+      size: {
+        x: 1000,
+        y: 1000,
+      },
+    });
+
     this._syncSimulation();
   }
 
   _syncSimulation () {
-    this.setState({
-      worldState: {
-        population: this.world.people.length,
-        spread: this.world.people.length,
-        turn: this.world.turnNumber,
-      }
-    });
+    let worldState = {
+      population: this.world.people.length,
+      spread: this.world.people.length,
+      turn: this.world.turnNumber,
+    };
+    this.setState((state) => ({
+      worldState,
+      worldHistory : [
+        state.worldState,
+        ...state.worldHistory,
+      ],
+    }));
   }
 
   render () {
@@ -115,7 +138,7 @@ export default class Simulation extends React.Component {
         <SimulationControls
           playing={this.state.playing}
           togglePlay={this.togglePlay}
-          stepForward={this.stepForward}
+          step={this.step}
           reset={this.reset}
         />
         <IonPhaser game={this.state.game} initialize={true} />

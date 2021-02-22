@@ -2,7 +2,9 @@ import Person from './Person';
 
 import Phaser from 'phaser';
 
-const SPEED = 5;
+// TODO: configurize
+const PERSON_SPEED = 500;
+const PERSON_MOVE_CHANCE = 0.7;
 
 export default class World {
   constructor(config) {
@@ -10,18 +12,23 @@ export default class World {
 
     this.rnd = new Phaser.Math.RandomDataGenerator();
     this._initialisePopulation(config);
+
+    this.turnNumber = 1;
   }
 
   step () {
     for (let person of this.people) {
-      this._move(person);
+      if (Math.random() < PERSON_MOVE_CHANCE) {
+        this._move(person);
+      }
     }
+    this.turnNumber += 1;
   }
 
   _move(person) {
-    let [x, y] = this._random(SPEED, SPEED);
-    let move = Phaser.Math.Vector2(x, y);
-    move.normalize();
+    let [r, theta] = this._random([PERSON_SPEED, 2*Math.PI]);
+    let move = new Phaser.Math.Vector2(r, 0);
+    move.rotate(theta);
     if (person.pos[0] + move.x < 0
       || person.pos[0] + move.x > this.config.size.x) {
       move.x *= -1;
