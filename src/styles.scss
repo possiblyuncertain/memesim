@@ -1,0 +1,15 @@
+.spaced-across {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: left;
+  padding: 20px;
+
+  .item {
+    margin-left: 20px;
+
+    &:first-child {
+      margin-left: 0px;
+    }
+  }
+}

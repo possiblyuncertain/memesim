@@ -2,8 +2,13 @@ import React from 'react';
 import Phaser from 'phaser';
 import { IonPhaser } from '@ion-phaser/react';
 
+import '../styles.scss';
+
 import infected from '../assets/infectedperson.png';
 import healthy from '../assets/healthyperson.png';
+
+import SimulationSummary from './SimulationSummary';
+import SimulationControls from './SimulationControls';
 
 import { World } from '../simulation';
 
@@ -62,14 +67,59 @@ export default class Simulation extends React.Component {
 
     this.sprites = [];
 
+    // For syncing react with simulation
+    let worldState = {
+      population: this.world.people.length,
+      spread: this.world.people.length,
+      turn: 0,
+    };
+
     this.state = {
       game,
+      worldState,
     }
 
     this.ref = React.createRef();
   }
 
+  togglePlay = () => {
+    this.setState((state, props) => ({
+      playing: ! state.playing,
+    }));
+  }
+
+  stepForward = () => {
+    this.world.step();
+    this._syncSimulation();
+  }
+
+  reset = () => {
+    alert("RESET");
+    this._syncSimulation();
+  }
+
+  _syncSimulation () {
+    this.setState({
+      worldState: {
+        population: this.world.people.length,
+        spread: this.world.people.length,
+        turn: this.world.turnNumber,
+      }
+    });
+  }
+
   render () {
-    return <IonPhaser game={this.state.game} initialize={true} />;
+    return (
+      <>
+        <SimulationSummary worldState={this.state.worldState} />
+        <SimulationControls
+          playing={this.state.playing}
+          togglePlay={this.togglePlay}
+          stepForward={this.stepForward}
+          reset={this.reset}
+        />
+        <IonPhaser game={this.state.game} initialize={true} />
+      </>
+    )
   }
 };
