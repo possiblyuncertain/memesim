@@ -44,8 +44,15 @@ export default class Simulation extends React.Component {
       // *sim* refers to the current *Simulation* instance
       for (const [i, person] of sim.world.people.entries()) {
         let newPos = person.pos.clone();
-        newPos.lerp(sim.sprites[i].getCenter(), SPRITE_SPEED);
-        sim.sprites[i].setPosition(newPos.x, newPos.y);
+        let sprite = sim.sprites[i]
+        newPos.lerp(sprite.getCenter(), SPRITE_SPEED);
+        sprite.setPosition(newPos.x, newPos.y);
+        const color = Phaser.Display.Color.GetColor(
+          255 * (1 - person.value),
+          255 * person.value,
+          0,
+        );
+        sprite.setTint(color);
       }
     }
 

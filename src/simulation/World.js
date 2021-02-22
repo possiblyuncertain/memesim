@@ -44,8 +44,10 @@ export default class World {
     this.people = [];
     for (let i=0; i<config.population; i++) {
       let pos = this._random([this.config.size.x, this.config.size.y]);
+      let value = Math.random();
       this.people.push({
         pos: new Phaser.Math.Vector2(...pos),
+        value,
       });
     }
   }
