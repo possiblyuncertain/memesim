@@ -1,3 +1,7 @@
+:root {
+  --shadow: #555;
+}
+
 .spaced-across {
   width: 100%;
   display: flex;
@@ -12,4 +16,18 @@
       margin-left: 0px;
     }
   }
+}
+
+.button-clickable {
+  box-shadow: 0px 8px var(--shadow);
+
+  &:active {
+    box-shadow: 0px 4px;
+    transform: translate(0, 5px);
+  }
+}
+
+.control-button {
+  @extend .button-clickable;
+  width: 70px;
 }
