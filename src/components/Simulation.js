@@ -2,15 +2,16 @@ import React from 'react';
 import Phaser from 'phaser';
 import { IonPhaser } from '@ion-phaser/react';
 
+import SimulationSummary from './SimulationSummary';
+import SimulationControls from './SimulationControls';
+import { World } from '../simulation';
+
 import '../styles.scss';
+import './Simulation.css';
 
 import infected from '../assets/infectedperson.png';
 import healthy from '../assets/healthyperson.png';
 
-import SimulationSummary from './SimulationSummary';
-import SimulationControls from './SimulationControls';
-
-import { World } from '../simulation';
 
 const SPRITE_SPEED = 0.8;
 
@@ -22,13 +23,19 @@ export default class Simulation extends React.Component {
       // *this* will point to phaser game object
       this.load.image('person', healthy);
       this.load.image('infected', infected);
-      this.cameras.main.setBackgroundColor('#bbbbbb');
-      this.cameras.main.zoom *= 1/4;
+      this.cameras.main.setBackgroundColor('#555555');
+      this.cameras.main.zoom *= 1/2;
     }
 
     // scene callbacks need *this* to be phaser game object
     let sim = this;
     function create () {
+      // Add bounding box
+      const {x, y} = sim.world.config.size;
+      const padding = 250;
+      const box = this.add.rectangle(x/2, y/2, x+padding, y+padding, 0x444455);
+      box.setStrokeStyle(3, 0x222222);
+      // Add person sprites
       for (const person of sim.world.people) {
         let newSprite = this.add.image(
           person.pos[0],
@@ -140,7 +147,7 @@ export default class Simulation extends React.Component {
 
   render () {
     return (
-      <>
+      <section>
         <SimulationSummary worldState={this.state.worldState} />
         <SimulationControls
           playing={this.state.playing}
@@ -148,8 +155,8 @@ export default class Simulation extends React.Component {
           step={this.step}
           reset={this.reset}
         />
-        <IonPhaser game={this.state.game} initialize={true} />
-      </>
+        <IonPhaser className="game-canvas" game={this.state.game} initialize={true} />
+      </section>
     )
   }
 };
