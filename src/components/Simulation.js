@@ -6,7 +6,6 @@ import SimulationSummary from './SimulationSummary';
 import SimulationControls from './SimulationControls';
 import { World } from '../simulation';
 
-import '../styles.scss';
 import './Simulation.css';
 
 import infected from '../assets/infectedperson.png';
@@ -168,13 +167,13 @@ export default class Simulation extends React.Component {
     return (
       <section>
         <SimulationSummary worldState={this.state.worldState} />
+        <IonPhaser className="game-canvas" game={this.state.game} initialize={true} />
         <SimulationControls
           playing={this.state.playing}
           togglePlay={this.togglePlay}
           step={this.step}
           reset={this.reset}
         />
-        <IonPhaser className="game-canvas" game={this.state.game} initialize={true} />
       </section>
     )
   }

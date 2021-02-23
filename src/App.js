@@ -1,4 +1,5 @@
 import './App.css';
+import './styles.scss';
 
 import { Simulation } from './components';
 
@@ -6,8 +7,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Simulation height="100%" width="100%" />
+        <h1>MEMESIM</h1>
       </header>
+      <main className="App-main">
+        <Simulation height={800} width={800} />
+      </main>
     </div>
   );
 }

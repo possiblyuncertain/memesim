@@ -3,7 +3,6 @@
 }
 
 .spaced-across {
-  width: 100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: left;
@@ -30,4 +29,8 @@
 .control-button {
   @extend .button-clickable;
   width: 70px;
+}
+
+.centered {
+  margin: auto;
 }
