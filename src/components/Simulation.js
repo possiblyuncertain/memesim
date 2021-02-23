@@ -23,8 +23,8 @@ export default class Simulation extends React.Component {
       // *this* will point to phaser game object
       this.load.image('person', healthy);
       this.load.image('infected', infected);
-      this.cameras.main.setBackgroundColor('#555555');
       this.cameras.main.zoom *= 1/2;
+      this.cameras.main.setBackgroundColor('#555555');
     }
 
     // scene callbacks need *this* to be phaser game object
@@ -50,16 +50,25 @@ export default class Simulation extends React.Component {
       // *this* will point to phaser game object
       // *sim* refers to the current *Simulation* instance
       for (const [i, person] of sim.world.people.entries()) {
-        let newPos = person.pos.clone();
         let sprite = sim.sprites[i]
+
+        // *Slide* sprite into new position
+        let newPos = person.pos.clone();
         newPos.lerp(sprite.getCenter(), SPRITE_SPEED);
         sprite.setPosition(newPos.x, newPos.y);
+
+        // Interpolate sprite tint color based on person values
+        // TODO: Would be better to set up using a stylesheet
+        //       ideally a gradient?
         const color = Phaser.Display.Color.GetColor(
           255 * (1 - person.value),
           255 * person.value,
           0,
         );
         sprite.setTint(color);
+
+        // Order sprites based on vertical pos
+        sprite.setDepth(newPos.y);
       }
     }
 
