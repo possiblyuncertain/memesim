@@ -26,7 +26,7 @@ export default class Simulation extends React.Component {
       // *this* will point to phaser game object
       this.load.image('person', healthy);
       this.load.image('infected', infected);
-      this.cameras.main.zoom *= 1/2;
+      this.cameras.main.zoom *= 1/4;
       this.cameras.main.setBackgroundColor('#555555');
     }
 
@@ -47,6 +47,12 @@ export default class Simulation extends React.Component {
         );
         sim.sprites.push(newSprite);
       }
+
+      // Center camera on simulation box
+      this.cameras.main.centerOn(
+        sim.state.config.size.x/2,
+        sim.state.config.size.y/2
+      );
     }
 
     function update () {
@@ -95,11 +101,21 @@ export default class Simulation extends React.Component {
       turn: 0,
     };
 
+    const config = {
+      size: {
+        x: 2000,
+        y: 2000,
+      },
+      population: 200,
+      tickTime: 300,
+    }
+
     this.state = {
       game,
       worldState,
       worldHistory : [],
       playing: false,
+      config,
     }
 
     this.ref = React.createRef();
@@ -115,7 +131,7 @@ export default class Simulation extends React.Component {
       // Start playing (but ensure we can't make two intervals)
       this.stepInterval = setInterval(() => {
         this.step();
-      }, this.props.tick || 200);
+      }, this.state.config.tickTime);
     }
     else {
       clearInterval(this.stepInterval);
@@ -133,12 +149,12 @@ export default class Simulation extends React.Component {
 
   reset = () => {
     console.log("HISTORY:", this.state.worldHistory);
-    //TODO: configurize
+    const config = this.state.config;
     this.world = new World({
-      population: 50,
+      population: config.population,
       size: {
-        x: 1000,
-        y: 1000,
+        x: config.size.x,
+        y: config.size.y,
       },
     });
 
@@ -149,7 +165,7 @@ export default class Simulation extends React.Component {
     const people = this.world.people;
     let worldState = {
       population: people.length,
-      spread: people.filter(p => p.value > 0.5).length,
+      spread: people.filter(p => p.value > 0.5).length, // TODO: extract
       interactions: people.filter(p => p.interactedWith).length,
       turn: this.world.turnNumber,
     };
