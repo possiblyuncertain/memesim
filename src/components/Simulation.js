@@ -48,11 +48,26 @@ export default class Simulation extends React.Component {
         sim.sprites.push(newSprite);
       }
 
+      const mainCamera = this.cameras.main;
       // Center camera on simulation box
-      this.cameras.main.centerOn(
+      mainCamera.centerOn(
         sim.state.config.size.x/2,
         sim.state.config.size.y/2
       );
+
+      this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+        if (deltaY > 0 && mainCamera.zoom >= 1/16) {
+          mainCamera.zoom *= 0.5;
+        }
+        else if (deltaY < 0 && mainCamera.zoom <= 1) {
+          mainCamera.zoom *= 2;
+        }
+      });
+      this.input.on("pointerdown", pointer => {
+        if (pointer.isDown) {
+          mainCamera.pan(pointer.worldX, pointer.worldY, 100);
+        }
+      });
     }
 
     function update () {
@@ -103,10 +118,10 @@ export default class Simulation extends React.Component {
 
     const config = {
       size: {
-        x: 2000,
-        y: 2000,
+        x: 6000,
+        y: 6000,
       },
-      population: 200,
+      population: 2000,
       tickTime: 300,
     }
 
