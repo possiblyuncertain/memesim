@@ -1,0 +1,10 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 110%;
+  z-index: 1000;
+}

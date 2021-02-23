@@ -5,6 +5,7 @@ import { IonPhaser } from '@ion-phaser/react';
 import SimulationSummary from './SimulationSummary';
 import SimulationControls from './SimulationControls';
 import PopulationChart from './PopulationChart';
+import SimulationOptions from './SimulationOptions';
 import { World } from '../simulation';
 import PhaserGame from './PhaserGame';
 
@@ -29,10 +30,11 @@ export default class Simulation extends React.Component {
     this.sprites = [];
 
     // For syncing react with simulation
-    let worldState = {
+    const worldState = {
       population: 0,
       spread: 0,
       turn: 0,
+      interactions: 0,
     };
 
     const config = {
@@ -103,6 +105,7 @@ export default class Simulation extends React.Component {
       interactions: people.filter(p => p.interactedWith).length,
       turn: this.world.turnNumber,
     };
+    // TODO: lift up world history?
     this.setState((state) => ({
       worldState,
       worldHistory : [
@@ -111,6 +114,12 @@ export default class Simulation extends React.Component {
         ...state.worldHistory,
       ],
     }));
+  }
+
+  configure = (options) => {
+    this.setState({
+      simConfig: {...options},
+    });
   }
 
   render () {
