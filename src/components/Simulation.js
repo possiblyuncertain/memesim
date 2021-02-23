@@ -15,6 +15,10 @@ import healthy from '../assets/healthyperson.png';
 
 const SPRITE_SPEED = 0.8;
 
+
+// TODO: A little too much code here.
+//       Should separate out phaser preload/create/update?
+
 export default class Simulation extends React.Component {
   constructor (props) {
     super(props)
@@ -99,10 +103,12 @@ export default class Simulation extends React.Component {
       playing: false,
     }
 
+    this.ref = React.createRef();
+  }
+
+  componentDidMount() {
     // Construct first world and initialise world state
     this.reset();
-
-    this.ref = React.createRef();
   }
 
   togglePlay = () => {
@@ -110,7 +116,7 @@ export default class Simulation extends React.Component {
       // Start playing (but ensure we can't make two intervals)
       this.stepInterval = setInterval(() => {
         this.step();
-      }, this.props.tick || 500);
+      }, this.props.tick || 200);
     }
     else {
       clearInterval(this.stepInterval);
@@ -127,6 +133,7 @@ export default class Simulation extends React.Component {
   }
 
   reset = () => {
+    console.log("HISTORY:", this.state.worldHistory);
     //TODO: configurize
     this.world = new World({
       population: 50,
@@ -140,15 +147,18 @@ export default class Simulation extends React.Component {
   }
 
   _syncSimulation () {
+    const people = this.world.people;
     let worldState = {
-      population: this.world.people.length,
-      spread: this.world.people.length,
+      population: people.length,
+      spread: people.filter(p => p.value > 0.5).length,
+      interactions: people.filter(p => p.interactedWith).length,
       turn: this.world.turnNumber,
     };
     this.setState((state) => ({
       worldState,
       worldHistory : [
-        state.worldState,
+        // Copy current world state into world history
+        {...state.worldState},
         ...state.worldHistory,
       ],
     }));

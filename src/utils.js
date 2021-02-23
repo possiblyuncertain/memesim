@@ -7,6 +7,21 @@ function random (limit) {
   return Rnd.realInRange(0, limit !== undefined ? limit : 1);
 }
 
+// Rnd.pick doesn't work here :(
+function pick (array) {
+  return array[Math.floor(random(array.length))];
+}
+
+function roll (chance, callback, ...args) {
+  if (random() < chance) {
+    if (callback) {
+      callback(...args);
+    }
+    return true;
+  }
+  return false;
+}
+
 function randomArray (limits) {
   return limits.map(limit => random(limit));
 }
@@ -22,10 +37,19 @@ function randomRadialVector (radius) {
   return v;
 }
 
+function bound(value, min, max) {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}
+
 export {
   Vec2,
   random,
+  roll,
+  pick,
   randomArray,
   randomVector,
   randomRadialVector,
+  bound,
 };
