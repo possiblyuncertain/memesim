@@ -4,6 +4,7 @@ import { IonPhaser } from '@ion-phaser/react';
 
 import SimulationSummary from './SimulationSummary';
 import SimulationControls from './SimulationControls';
+import PopulationChart from './PopulationChart';
 import { World } from '../simulation';
 
 import './Simulation.css';
@@ -205,6 +206,7 @@ export default class Simulation extends React.Component {
           step={this.step}
           reset={this.reset}
         />
+        <PopulationChart history={this.state.worldHistory}/>
       </section>
     )
   }
