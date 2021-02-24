@@ -13,6 +13,7 @@ export default class PopulationChart extends React.Component {
       turns: 100,
       width: 800,
       height: 200,
+      margin: {x: 40, y: 20},
     }
   }
 
@@ -20,23 +21,42 @@ export default class PopulationChart extends React.Component {
     this.svg = d3.select(this.ref.current)
       .append("svg")
       .attr("width", this.state.width) // TODO: configurize
-      .attr("height", this.state.height)
-      .attr('transform', d => "scale(1, -1)");
+      .attr("height", this.state.height + 2 * this.state.margin.y);
   }
 
   draw() {
-    let turnPixels = this.state.width / this.state.turns;
-    let populationPixels = this.state.height / this.props.history[0].population;
+    const { width, height, margin, turns } = this.state;
+    const pop = this.props.history[0].population;
+    const turnPixels = width / turns;
+    const populationPixels = height / pop;
+
     // Scatter points
     this.svg.append('g')
+      .attr('transform', d => `translate(${margin.x}, ${margin.y})`)
       .selectAll('dot')
       .data(this.props.history)
       .enter()
       .append('circle')
-        .attr('cx', d => `${d.turn * turnPixels}`)
-        .attr('cy', d => `${d.spread * populationPixels}`)
+        .attr('cx', d => `${d.turn * width / turns}`)
+        .attr('cy', d => `${height - d.spread * (height / pop)}`)
         .attr('r', 2)
-        .style('fill', 'cyan')
+        .style('fill', 'blue')
+
+    // X-axis
+    let xScale = d3.scaleLinear()
+      .domain([0, turns])
+      .range([0, width]);
+    this.svg.append('g')
+      .attr('transform', d => `translate(${margin.x}, ${height+margin.y})`)
+      .call(d3.axisBottom(xScale));
+
+    // Y-axis
+    let yScale = d3.scaleLinear()
+      .domain([0, this.props.history[0].population]).nice()
+      .range([height, 0]);
+    this.svg.append('g')
+      .attr('transform', d => `translate(${margin.x}, ${margin.y})`)
+      .call(d3.axisLeft(yScale));
   }
 
   render() {
