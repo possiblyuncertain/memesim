@@ -107,10 +107,10 @@ export default class Simulation extends React.Component {
     }));
   }
 
-  configure = (options) => {
-    this.setState({
-      config: {...options},
-    });
+  configure = (option, value) => {
+    this.setState(state => ({
+      config: { ...state.config, [option]: value },
+    }));
   }
 
   render () {
@@ -118,7 +118,10 @@ export default class Simulation extends React.Component {
       <section>
         <div className="flex-across simulation-top">
           <SimulationSummary worldState={this.state.worldState} />
-          <SimulationOptions configure={this.configure} />
+          <SimulationOptions
+            configure={this.configure}
+            config={this.state.config}
+          />
         </div>
 
         <IonPhaser
