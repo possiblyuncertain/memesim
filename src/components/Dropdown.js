@@ -6,13 +6,15 @@ export default function Dropdown (props) {
   let [showing, setShowing] = React.useState(false);
 
   return (
-    <>
-      <button className="dropdown" onClick={setShowing(! showing)}>
+    <span>
+      <button className="button-small dropdown" onClick={() => setShowing(! showing)}>
         <i className="fa fa-caret-down" />
+        { showing &&
+          <div className="dropdown-content above">
+            { props.children }
+          </div>
+        }
       </button>
-      <div className="dropdown-content">
-        { props.children }
-      </div>
-    </>
+    </span>
   );
 }

@@ -11,15 +11,6 @@ import PhaserGame from './PhaserGame';
 
 import './Simulation.css';
 
-import infected from '../assets/infectedperson.png';
-import healthy from '../assets/healthyperson.png';
-
-
-const SPRITE_SPEED = 0.8;
-
-
-// TODO: A little too much code here.
-//       Should separate out phaser preload/create/update?
 
 export default class Simulation extends React.Component {
   constructor (props) {
@@ -118,21 +109,31 @@ export default class Simulation extends React.Component {
 
   configure = (options) => {
     this.setState({
-      simConfig: {...options},
+      config: {...options},
     });
   }
 
   render () {
     return (
       <section>
-        <SimulationSummary worldState={this.state.worldState} />
-        <IonPhaser className="game-canvas" game={this.state.game} initialize={true} />
+        <div className="flex-across simulation-top">
+          <SimulationSummary worldState={this.state.worldState} />
+          <SimulationOptions configure={this.configure} />
+        </div>
+
+        <IonPhaser
+          className="game-canvas"
+          game={this.state.game}
+          initialize={true}
+        />
+
         <SimulationControls
           playing={this.state.playing}
           togglePlay={this.togglePlay}
           step={this.step}
           reset={this.reset}
         />
+
         <PopulationChart history={this.state.worldHistory}/>
       </section>
     )

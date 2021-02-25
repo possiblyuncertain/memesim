@@ -5,6 +5,8 @@
 
 .dropdown-content {
   position: absolute;
-  top: 110%;
-  z-index: 1000;
+  z-index: var(--overlay-layer);
+  right: 0%;
+  color: var(--bright);
+  background-color: var(--dark);
 }
