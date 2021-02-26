@@ -1,12 +1,10 @@
 import React from 'react';
 
-import './InfoBox.scss';
-
 export default function InfoBox ({label, value}) {
   return (
-    <div className="item infobox">
+    <div className="item">
       <h3>
-        {label} <span>{value}</span>
+        {label} <span className="value-box">{value}</span>
       </h3>
     </div>
   );

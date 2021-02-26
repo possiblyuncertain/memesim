@@ -43,6 +43,12 @@ function bound(value, min, max) {
   return value;
 }
 
+function capitalise(str) {
+  return str.split(' ')
+    .map(substr => substr[0].toUpperCase() + substr.slice(1))
+    .join(' ');
+}
+
 export {
   Vec2,
   random,
@@ -52,4 +58,5 @@ export {
   randomVector,
   randomRadialVector,
   bound,
+  capitalise,
 };

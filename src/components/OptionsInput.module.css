@@ -1,0 +1,20 @@
+.option {
+  padding: 0px 20px;
+  width: 300px;
+  text-align: left;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider {
+  display: flex;
+}
+
+.limit {
+  display: inline-block;
+  width: 6ch;
+  text-align: center;
+}
