@@ -31,16 +31,17 @@ export default class PopulationChart extends React.Component {
     const populationPixels = height / pop;
 
     // Scatter points
-    this.svg.append('g')
+    let data = this.svg.append('g')
       .attr('transform', d => `translate(${margin.x}, ${margin.y})`)
       .selectAll('dot')
-      .data(this.props.history)
-      .enter()
+      .data(this.props.history);
+
+    data.enter()
       .append('circle')
         .attr('cx', d => `${d.turn * width / turns}`)
-        .attr('cy', d => `${height - d.spread * (height / pop)}`)
+        .attr('cy', d => `${(1 - (d.spread / pop)) * height}`)
         .attr('r', 2)
-        .style('fill', 'blue')
+        .style('fill', 'blue');
 
     // X-axis
     let xScale = d3.scaleLinear()
@@ -52,7 +53,7 @@ export default class PopulationChart extends React.Component {
 
     // Y-axis
     let yScale = d3.scaleLinear()
-      .domain([0, this.props.history[0].population]).nice()
+      .domain([0, 100]).nice()
       .range([height, 0]);
     this.svg.append('g')
       .attr('transform', d => `translate(${margin.x}, ${margin.y})`)
