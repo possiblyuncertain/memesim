@@ -15,9 +15,7 @@ export default class Simulation extends React.Component {
   constructor (props) {
     super(props)
 
-    let game = PhaserGame(this);
-
-    this.sprites = [];
+    let game = new PhaserGame(this);
 
     // For syncing react with simulation
     const worldState = {
@@ -97,6 +95,7 @@ export default class Simulation extends React.Component {
 
     this.props.startHistory(config);
     this.setState({resetRequired: false});
+    this.state.game.reset();
     this._syncSimulation();
   }
 
@@ -157,7 +156,7 @@ export default class Simulation extends React.Component {
 
         <IonPhaser
           className="game-canvas"
-          game={this.state.game}
+          game={this.state.game.gameConfig}
           initialize={true}
         />
 
