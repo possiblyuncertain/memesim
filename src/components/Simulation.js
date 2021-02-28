@@ -48,6 +48,14 @@ export default class Simulation extends React.Component {
   componentDidMount() {
     // Construct first world and initialise world state
     this.reset();
+
+    // Disable default mouse-wheel scrolling.
+    // TODO: Should be bound to the *onWheel* jsx property of main *section*
+    // element, but that doesn't seem to work...
+    this.ref.current.addEventListener('wheel',
+      e => e.preventDefault(),
+      {passive: false}
+    );
   }
 
   togglePlay = () => {
@@ -145,7 +153,7 @@ export default class Simulation extends React.Component {
 
   render () {
     return (
-      <section>
+      <section ref={this.ref}>
         <div className="flex-across simulation-top">
           <SimulationSummary worldState={this.state.worldState} />
           <SimulationOptions
