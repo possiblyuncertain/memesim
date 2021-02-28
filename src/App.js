@@ -1,7 +1,7 @@
 import './App.css';
 import './styles.scss';
 
-import { Simulation } from './components';
+import { SimulationPage } from './pages';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <h1>MEMESIM</h1>
       </header>
       <main className="App-main">
-        <Simulation height={800} width={800} />
+        <SimulationPage />
       </main>
     </div>
   );

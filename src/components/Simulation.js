@@ -4,7 +4,6 @@ import { IonPhaser } from '@ion-phaser/react';
 
 import SimulationSummary from './SimulationSummary';
 import SimulationControls from './SimulationControls';
-import PopulationChart from './PopulationChart';
 import SimulationOptions from './SimulationOptions';
 import { World } from '../simulation';
 import PhaserGame from './PhaserGame';
@@ -40,7 +39,6 @@ export default class Simulation extends React.Component {
     this.state = {
       game,
       worldState,
-      worldHistory : [],
       playing: false,
       config,
     }
@@ -75,7 +73,6 @@ export default class Simulation extends React.Component {
   }
 
   reset = () => {
-    console.log("HISTORY:", this.state.worldHistory);
     const config = this.state.config;
     this.world = new World({
       population: config.population,
@@ -85,10 +82,14 @@ export default class Simulation extends React.Component {
       },
     });
 
+    this.props.startHistory(config);
+
     this._syncSimulation();
   }
 
   _syncSimulation () {
+    // Extract details from simulation instance, to update React state,
+    // and record events
     const people = this.world.people;
     let worldState = {
       population: people.length,
@@ -96,15 +97,12 @@ export default class Simulation extends React.Component {
       interactions: people.filter(p => p.interactedWith).length,
       turn: this.world.turnNumber,
     };
-    // TODO: lift up world history?
+
     this.setState((state) => ({
       worldState,
-      worldHistory : [
-        // Copy current world state into world history
-        {...state.worldState},
-        ...state.worldHistory,
-      ],
     }));
+
+    this.props.recordHistory(worldState);
   }
 
   configure = (option, value) => {
@@ -136,8 +134,6 @@ export default class Simulation extends React.Component {
           step={this.step}
           reset={this.reset}
         />
-
-        <PopulationChart history={this.state.worldHistory}/>
       </section>
     )
   }
