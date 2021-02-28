@@ -39,8 +39,9 @@ export default class Simulation extends React.Component {
     this.state = {
       game,
       worldState,
-      playing: false,
       config,
+      playing: false,
+      resetRequired: false,
     }
 
     this.ref = React.createRef();
@@ -52,19 +53,31 @@ export default class Simulation extends React.Component {
   }
 
   togglePlay = () => {
-    if (! this.state.playing && ! this.stepInterval) {
-      // Start playing (but ensure we can't make two intervals)
-      this.stepInterval = setInterval(() => {
-        this.step();
-      }, this.state.config.tickTime);
+    // TODO: this isn't robust with multiple state updates per render cycle
+    if (this.state.playing) {
+      this._stopPlay();
     }
     else {
-      clearInterval(this.stepInterval);
-      this.stepInterval = null;
+      this._startPlay(this.state.config.tickTime);
     }
-    this.setState((state, props) => ({
-      playing: ! state.playing,
-    }));
+  }
+
+  _startPlay(tick) {
+    if (this.stepInterval) {
+      throw "Step interval already exists";
+    }
+    this.stepInterval = setInterval(() => {
+      this.step();
+    }, tick);
+    this.setState({ playing: true });
+  }
+
+  _stopPlay() {
+    if (this.stepInterval) {
+      clearInterval(this.stepInterval);
+    }
+    this.stepInterval = null;
+    this.setState({ playing: false });
   }
 
   step = () => {
@@ -83,7 +96,7 @@ export default class Simulation extends React.Component {
     });
 
     this.props.startHistory(config);
-
+    this.setState({resetRequired: false});
     this._syncSimulation();
   }
 
@@ -106,9 +119,29 @@ export default class Simulation extends React.Component {
   }
 
   configure = (option, value) => {
+    // TODO: Not convinced this is better than separate, per-option
+    // configuration functions
     this.setState(state => ({
-      config: { ...state.config, [option]: value },
-    }));
+      config: {
+        ...state.config,
+        [option]: value,
+      },
+    }), () => {
+      // Then, possibly update running simulation based on config changes.
+      // TODO: would it be better to listen for config updates and respond?
+
+      if (option == 'tickTime' && this.state.playing) {
+        this._stopPlay();
+        this._startPlay(value);
+      }
+
+      else if (option == "population" || option == "size") {
+        // Requires simulation reset, but might be annoying to force.
+        // Instead, we'll let the user know this needs to happen.
+        this.setState({resetRequired: true});
+      }
+
+    });
   }
 
   render () {
@@ -133,6 +166,7 @@ export default class Simulation extends React.Component {
           togglePlay={this.togglePlay}
           step={this.step}
           reset={this.reset}
+          highlight={{reset: this.state.resetRequired}}
         />
       </section>
     )

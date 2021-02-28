@@ -3,6 +3,7 @@
 :root {
   // basic theme colours
   --white: #eee;
+  --light-blue: #aae;
   --gray: #555;
   --dark-gray: #333;
   --light-gray: #777;
@@ -12,6 +13,7 @@
   --bright: var(--white);
   --shadow: var(--gray);
   --dark: var(--dark-gray);
+  --highlight: var(--light-blue);
 
   // derived colours (pre-processed)
   --muted: #bbb;// darken(var(--bright), 20%); TODO
@@ -48,6 +50,16 @@
 
 // Elements
 
+// Setting a background value destroys default button styling, need to set:
+button {
+  background-color: var(--white);
+  color: black;
+  border: none;
+  padding: 5px;
+  margin: 1px;
+  border-radius: 5px;
+}
+
 .button-clickable {
   box-shadow: 0px 8px var(--shadow);
   margin-bottom: 10px;
@@ -78,7 +90,7 @@
 }
 
 .button-small {
-  padding: 0px;
+  min-width: 40px;
 }
 
 .value-box {
@@ -87,4 +99,46 @@
   min-width: 6ch;
   border: 1px solid var(--bright);
   padding: 0px 5px;
+}
+
+
+// Effects
+
+@keyframes flickering {
+  0% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
+.pulse {
+  background-image: radial-gradient(#0000, var(--highlight));
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-color: inherit;
+    border-radius: inherit;
+
+    animation: flickering 0.5s ease-in infinite alternate;
+  }
+}
+
+@keyframes hopping {
+  from {
+    transform: translate(0px, -5px);
+  }
+  to {
+  }
+}
+.hop {
+  animation: hopping 0.2s ease-out alternate;
 }
