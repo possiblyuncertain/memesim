@@ -16,12 +16,22 @@ export default function SimulationOptions ({configure, config}) {
 
         <OptionsInput name='population' min="2" max="10000" logScale="true"
           value={config.population}
-          update={ val => configure('population', val) }
+          update={ val => configure('population', val, true) }
         />
 
         <OptionsInput name='world size' min="1000" max="10000"
           value={config.size.x}
-          update={ val => configure('size', { x: val, y: val }) }
+          update={ val => configure('size', { x: val, y: val }, true) }
+        />
+
+        <OptionsInput name='reasonableness' min="0" max="1" scale="10"
+          value={config.reasonableness}
+          update={ val => configure('reasonableness', val, true) }
+        />
+
+        <OptionsInput name='tribalism' min="0" max="1" scale="10"
+          value={config.tribalism}
+          update={ val => configure('tribalism', val, true) }
         />
 
       </form>

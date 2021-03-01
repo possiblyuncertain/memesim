@@ -11,9 +11,14 @@ export default function OptionsInput (props) {
   let {min, max, value} = props;
 
   let update = (changeEvt) => {
-    props.update(changeEvt.target.valueAsNumber);
+    props.update(changeEvt.target.valueAsNumber / (props.scale || 1));
   };
 
+  if (props.scale) {
+    min *= props.scale;
+    max *= props.scale;
+    value *= props.scale;
+  }
   if (props.logScale) {
     // *range* inputs don't like non-integer values.
     // Need to clamp terminals to integer values, and scale up a bit to

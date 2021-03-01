@@ -14,7 +14,7 @@ export default class World {
     }
 
     // Set up dynamics
-    this.dynamics = new Dynamics(config);
+    this.dynamics = new Dynamics(config.dynamics);
     this.interactChance = this.dynamics.interactChance();
     this.rapport = this.dynamics.rapport();
     this.argument = this.dynamics.argument(FACTS);

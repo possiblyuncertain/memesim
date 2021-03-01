@@ -32,6 +32,9 @@ export default class Simulation extends React.Component {
       },
       population: 2000,
       tickTime: 300,
+      // Dynamics
+      reasonableness: 0.5,
+      tribalism: 0.5,
     }
 
     this.state = {
@@ -99,6 +102,10 @@ export default class Simulation extends React.Component {
         x: config.size.x,
         y: config.size.y,
       },
+      dynamics: {
+        reasonableness: { peak: config.reasonableness, width: 0.5 },
+        valuesGroup: { peak: config.tribalism, width: 0.5 },
+      },
     });
 
     this.props.startHistory(config);
@@ -125,7 +132,7 @@ export default class Simulation extends React.Component {
     this.props.recordHistory(worldState);
   }
 
-  configure = (option, value) => {
+  configure = (option, value, reset=false) => {
     // TODO: Not convinced this is better than separate, per-option
     // configuration functions
     this.setState(state => ({
@@ -142,7 +149,7 @@ export default class Simulation extends React.Component {
         this._startPlay(value);
       }
 
-      else if (option == "population" || option == "size") {
+      if (reset) {
         // Requires simulation reset, but might be annoying to force.
         // Instead, we'll let the user know this needs to happen.
         this.setState({resetRequired: true});
