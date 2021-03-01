@@ -57,6 +57,8 @@ export default class PhaserGame {
           controller.mainCamera.pan(pointer.worldX, pointer.worldY, 100);
         }
       });
+
+      sim._resizePhaserGame(); // TODO: This feels suboptimal...
     };
 
     function update () {
@@ -78,7 +80,7 @@ export default class PhaserGame {
           255 * person.value,
           0,
         );
-        sprite.setTint('blue');
+        sprite.setTint(color);
 
         // Order sprites based on vertical pos
         sprite.setDepth(newPos.y);
@@ -87,8 +89,8 @@ export default class PhaserGame {
 
     this.gameConfig = {
       type: Phaser.AUTO,
-      width: 800,//sim.props.width,
-      height: 800,//sim.props.height,
+      width: 800,
+      height: 800,
       scene: {
         preload,
         create,
@@ -128,5 +130,9 @@ export default class PhaserGame {
     this.mainCamera.centerOn(x/2, y/2);
     this.mainCamera.zoom = 1/4;
     this.mainCamera.setBackgroundColor(colors.background);
+  }
+
+  resize (size) {
+    this.game.scale.resize(size, size);
   }
 };

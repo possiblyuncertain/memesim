@@ -59,6 +59,9 @@ export default class Simulation extends React.Component {
       e => e.preventDefault(),
       {passive: false}
     );
+
+    // Need to manually resize game canvas when window resizes
+    window.addEventListener('resize', this._resizePhaserGame);
   }
 
   togglePlay = () => {
@@ -110,8 +113,13 @@ export default class Simulation extends React.Component {
 
     this.props.startHistory(config);
     this.setState({resetRequired: false});
-    this.state.game.reset();
     this._syncSimulation();
+  }
+
+  _resizePhaserGame = () => {
+    if (! this.ref || ! this.ref.current) return;
+    const width = this.ref.current.offsetWidth;
+    this.state.game.resize(width);
   }
 
   _syncSimulation () {
