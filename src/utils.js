@@ -37,6 +37,36 @@ function randomRadialVector (radius) {
   return v;
 }
 
+function centralDistribution (params={ peak: 0, width: 1 }, n=2) {
+  // This provides a crude approximation of a normal distribution,
+  // calculated using n uniform random samples.
+  const die = 2 * params.width / n;
+  const min = params.peak - params.width;
+  if (n === 2) {
+    // Hardcode most likely case
+    return function () {
+      return min + die * (Math.random() + Math.random());
+    }
+  }
+  return function () {
+    for (var total=0, i=0; i<n; i++) total += Math.random();
+    return min + die * total;
+  };
+}
+
+function flatDistribution (params) {
+  const min = params.from;
+  const range = params.to - params.from;
+  return function () {
+    return min + Math.random() * range;
+  };
+}
+
+function discreteDistribution (params=[0, 1]) {
+  const len = params.length;
+  return () => params[Math.floor(Math.random() * len)];
+}
+
 function bound(value, min, max) {
   if (value < min) return min;
   if (value > max) return max;
@@ -57,6 +87,9 @@ export {
   randomArray,
   randomVector,
   randomRadialVector,
+  centralDistribution,
+  flatDistribution,
+  discreteDistribution,
   bound,
   capitalise,
 };

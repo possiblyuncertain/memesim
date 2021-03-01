@@ -1,17 +1,26 @@
 import * as utils from '../utils'
 
-const VALUE_BIAS = 0.3;
-
 export default class Person {
   constructor (world) {
     this.worldSize = world.config.size;
     this.pos = utils.randomVector(this.worldSize.x, this.worldSize.y);
-    this.value = utils.random();
-    this.ideology = utils.random(2) - 1; // TODO: generalise to vector
+
+    this.attributes = world.dynamics.generatePerson();
+    this.world = world;
   }
 
   move(speed) {
-    let move = utils.randomRadialVector(speed)
+    let move;
+    if (this.interactedWith) {
+      // Move towards or away from interacted person, depending on rapport
+      move = this.interactedWith.other.pos.clone();
+      move.subtract(this.pos);
+      move.normalize();
+      move.scale(speed * this.interactedWith.rapport);
+    }
+    else {
+      move = utils.randomRadialVector(speed);
+    }
     this.pos.add(move);
     // If out of bounds, reflect move about offending axis
     if (this.pos.x < 0 || this.pos.x > this.worldSize.x) {
@@ -25,16 +34,18 @@ export default class Person {
   }
 
   interact (other) {
-    // TODO: generalise to higher dimension using dot product
-    // TODO: extract dynamics/analytics equations
-    const alignment = this.ideology * other.ideology;
-    const rapport = (utils.random(2) - 1 + alignment) / 2;
-    const relativeValue = this.value - VALUE_BIAS;
-    other.value += rapport * relativeValue;
-    other.value = utils.bound(other.value, 0, 1);
+    if (other === this) return;
+    const {rapport, argument, persuasion} = this.world;
+    let me = this.attributes;
+    let you = other.attributes;
+    const currentRapport = rapport(me, you);
+    const persuaded = persuasion(me, currentRapport, argument(you, me));
+    me.belief += (you.belief - me.belief) * persuaded;
+    me.belief = utils.bound(me.belief, -1, 1); // TODO: shouldn't be needed
+    this.value = me.belief; // TODO: remove?
     this.interactedWith = {
       other,
-      rapport,
+      rapport: currentRapport,
     };
   }
 
