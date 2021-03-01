@@ -9,7 +9,6 @@
 
 import Phaser from 'phaser';
 
-import infected from '../assets/infectedperson.png';
 import healthy from '../assets/healthyperson.png';
 
 const SPRITE_SPEED = 0.8;
