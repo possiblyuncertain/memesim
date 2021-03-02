@@ -1,5 +1,5 @@
 import './App.css';
-import './styles.scss';
+import './styles/styles.scss';
 
 import { SimulationPage } from './pages';
 

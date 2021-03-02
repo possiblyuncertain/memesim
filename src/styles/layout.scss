@@ -1,0 +1,22 @@
+.flex-across {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: left;
+  align-items: center;
+
+  .item {
+    margin-left: 20px;
+
+    &:first-child {
+      margin-left: 0px;
+    }
+  }
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.centered {
+  margin: auto;
+}

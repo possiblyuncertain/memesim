@@ -1,0 +1,24 @@
+:root {
+  // basic theme colours
+  --white: #eee;
+  --light-blue: #aae;
+  --gray: #555;
+  --dark-gray: #333;
+  --light-gray: #777;
+
+  // semantic colours
+  --neutral: var(--light-gray);
+  --bright: var(--white);
+  --shadow: var(--gray);
+  --dark: var(--dark-gray);
+  --highlight: var(--light-blue);
+
+  // derived colours (pre-processed)
+  --muted: #bbb;// darken(var(--bright), 20%); TODO
+  --deep: #222;//darken(var(--dark-gray), 20%); TODO
+
+  // layers
+  --overlay-layer: 100;
+  --popup-layer: 200;
+  --alert-layer: 300;
+}

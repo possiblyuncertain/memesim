@@ -1,0 +1,49 @@
+button {
+  background-color: var(--white);
+  color: black;
+  border: none;
+  padding: 5px;
+  margin: 1px;
+  border-radius: 5px;
+}
+
+.button-clickable {
+  box-shadow: 0px 8px var(--shadow);
+  margin-bottom: 10px;
+
+  &:active {
+    box-shadow: 0px 4px var(--shadow);
+    transform: translate(0, 5px);
+  }
+}
+
+.control-button {
+  @extend .button-clickable;
+  width: 70px;
+}
+
+.overlay {
+  position: relative;
+
+  * {
+    z-index: var(--overlay-layer);
+    position: absolute;
+  }
+
+  .top-right {
+    top: 10%;
+    right: 10%;
+  }
+}
+
+.button-small {
+  min-width: 40px;
+}
+
+.value-box {
+  display: inline-block;
+  text-align: right;
+  min-width: 6ch;
+  border: 1px solid var(--bright);
+  padding: 0px 5px;
+}

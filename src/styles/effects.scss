@@ -1,0 +1,38 @@
+@keyframes flickering {
+  0% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
+.pulse {
+  background-image: radial-gradient(#0000, var(--highlight));
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-color: inherit;
+    border-radius: inherit;
+
+    animation: flickering 0.5s ease-in infinite alternate;
+  }
+}
+
+@keyframes hopping {
+  from {
+    transform: translate(0px, -5px);
+  }
+  to {
+  }
+}
+.hop {
+  animation: hopping 0.2s ease-out alternate;
+}
