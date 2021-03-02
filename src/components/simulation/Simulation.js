@@ -5,8 +5,8 @@ import { IonPhaser } from '@ion-phaser/react';
 import SimulationSummary from './SimulationSummary';
 import SimulationControls from './SimulationControls';
 import SimulationOptions from './SimulationOptions';
-import { World } from '../simulation';
-import PhaserGame from './PhaserGame';
+import { World } from '../../simulation';
+import PhaserGame from '../PhaserGame';
 
 import './Simulation.css';
 

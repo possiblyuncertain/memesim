@@ -24,10 +24,10 @@ Get up and running:
 
 Launch test runner:
 
-`yarn test`
+    yarn test
 
 ### Building
 
 Build for production:
 
-`yarn build`
+    yarn build

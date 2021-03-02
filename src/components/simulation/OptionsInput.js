@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from './OptionsInput.module.css';
-import {capitalise} from '../utils';
+import {capitalise} from '../../utils';
 
 const LOG_RESOLUTION_INCREASE = 1000;
 

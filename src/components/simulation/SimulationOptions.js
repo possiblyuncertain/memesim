@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Dropdown from './Dropdown';
+import Dropdown from '../generic/Dropdown';
 import OptionsInput from './OptionsInput';
 
 export default function SimulationOptions ({configure, config}) {

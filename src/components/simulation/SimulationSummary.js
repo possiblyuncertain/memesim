@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InfoBox from './InfoBox';
+import InfoBox from '../generic/InfoBox';
 
 export default function SimulationSummary (props) {
   let world = props.worldState;
