@@ -112,6 +112,7 @@ export default class Simulation extends React.Component {
     });
 
     this.props.startHistory(config);
+    this.state.game.reset();
     this.setState({resetRequired: false});
     this._syncSimulation();
   }
